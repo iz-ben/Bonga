@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  padding: 0 0 60px;
+  font-family: sans-serif;
+  background-image: url("./tile.png");
+  background-repeat: repeat-x;
+}
+
+.masthead
+{
+  position: relative;
+}
+
+.masthead .branding .logo
+{
+  margin: 0 auto;
+  max-width: 160px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px; /* Set the fixed height of the footer here */
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+  text-align: center;
+}
