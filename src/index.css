@@ -42,7 +42,9 @@ a {
   min-height: 154px; }
   .masthead .branding .logo {
     margin: 0 auto;
-    max-width: 160px; }
+    max-width: 160px;
+    opacity: 1;
+    transition: all 1s; }
 
 body.home #root {
   display: flex;
@@ -55,6 +57,10 @@ body.home .main-content {
     display: flex;
     justify-content: center;
     flex: 1; }
+
+body.home .logo {
+  opacity: 0 !important;
+  transition: all 1s; }
 
 .footer {
   position: absolute;
@@ -77,3 +83,14 @@ body.home .main-content {
   border: #d9d9d9 solid 1px;
   height: 50px;
   line-height: 50px; }
+
+.pagination {
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px; }
+
+.pagination li {
+  display: inline-block; }
+
+.pagination .break a {
+  cursor: default; }

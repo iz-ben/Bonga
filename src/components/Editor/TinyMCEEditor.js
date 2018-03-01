@@ -26,6 +26,8 @@ class TinyMCEEditor extends React.Component {
 
     renderRichText()
     {
+        tinymce.remove(`#${this.props.id}`);
+
         this.editor = tinymce.init({
             selector: `#${this.props.id}`,
             //skin_url: `${process.env.PUBLIC_URL}/skins/lightgray`,
@@ -40,8 +42,17 @@ class TinyMCEEditor extends React.Component {
                     this.props.typeText(content);
                     //console.log(content);
                 });
+
+                editor.on('init',(e) => {
+                    e.target.setContent(this.props.editorContent);
+                });
             }
         });
+    }
+
+    shouldComponentUpdate(nextProps, nextState)
+    {
+        return true;
     }
 
     componentDidMount()
@@ -59,7 +70,7 @@ class TinyMCEEditor extends React.Component {
     }
 
     render() {
-        console.log(this.editor);
+        //console.log(this.editor);
         return (
             <textarea
                 id={this.props.id}

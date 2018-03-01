@@ -8,6 +8,16 @@ import styled from 'styled-components';
 
 const RichEditor = styled.div`
     margin-bottom:10px;
+    display: ${props => props.visible ? 'block' : 'none'};
+`;
+
+const PlaceholderEditor = styled.div`
+    margin-bottom:10px;
+    display: ${props => props.visible ? 'block' : 'none'};
+`;
+
+const TinyMCE = styled.div`
+ margin-bottom:10px;
 `;
 
 const SubmitButton = styled.button`
@@ -20,34 +30,20 @@ const SubmitButton = styled.button`
 
 class Editor extends React.Component
 {
-    passiveEditor()
-    {
-        return <input onClick={this.props.selectEditor} type="text" placeholder={WHATS_ON_YOUR_MIND} name=''/>;
-    }
-
-    tinyMCE()
-    {
-        return (
-            <div>
-                <RichEditor>
-                    <TinyMCEEditor id={`richEditor`}/>
-                </RichEditor>
-                <SubmitButton type="button" className="btn btn-primary btn-sm">Submit</SubmitButton>
-            </div>
-        )
-    }
     render()
     {
-        //console.log(this.props);
-        const editor = this.props.editorActive ? this.tinyMCE():this.passiveEditor();
-
         return (
             <div className="editor">
-                {editor}
-                <hr/>
-                <div>
-                    {this.props.editorContent}
-                </div>
+                <RichEditor visible={this.props.editorActive}>
+                    <TinyMCE>
+                        <TinyMCEEditor id={`richEditor`}/>
+                    </TinyMCE>
+                    <SubmitButton type="button" className="btn btn-primary btn-sm">Submit</SubmitButton>
+                    <button typeof="button"  className="btn btn-secondary btn-sm" onClick={this.props.closeEditor}>Cancel</button>
+                </RichEditor>
+                <PlaceholderEditor visible={!this.props.editorActive}>
+                    <input onClick={this.props.selectEditor} type="text" placeholder={WHATS_ON_YOUR_MIND} name=''/>
+                </PlaceholderEditor>
             </div>
         )
     }
