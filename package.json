@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@redux-offline/redux-offline": "^2.3.2",
     "bootstrap": "^4.0.0",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
     "jquery": "1.9.1",
     "node-sass-chokidar": "^0.0.3",
+    "npm-run-all": "^4.1.2",
     "popper.js": "1.12.9",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -19,12 +21,20 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "1.1.1",
     "redux": "^3.7.2",
+    "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0",
-    "styled-components": "^3.1.6"
+    "reselect": "^3.0.1",
+    "styled-components": "^3.1.6",
+    "tinymce": "^4.7.9",
+    "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

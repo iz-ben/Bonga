@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {HOME_TITLE, SITE_NAME} from "../../constants";
 import {Content} from "../../components/Content";
-
+import Home from "../../components/Home/Loadable";
 class HomePage extends React.Component
 {
     render()
@@ -17,18 +16,21 @@ class HomePage extends React.Component
                     <meta name="description" content="" />
                 </Helmet>
                 <Content>
-                    Home page
+                    <Home {...this.props}/>
                 </Content>
             </div>
         )
     }
 }
 
+const mapStateToProps = state => ({
+
+})
+
 const mapDispatchToProps = dispatch => bindActionCreators({
-    bonga: () => {}
 }, dispatch);
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(HomePage);

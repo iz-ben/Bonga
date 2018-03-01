@@ -2,7 +2,11 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
 import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
-import rootReducer from '../modules/index'
+import createSagaMiddleware from 'redux-saga'
+import createReducer from "../modules";
+import { offline } from '@redux-offline/redux-offline';
+import offlineConfig from '@redux-offline/redux-offline/lib/defaults';
+import mySaga from '../saga'
 
 export const history = createHistory();
 
@@ -20,16 +24,24 @@ if (process.env.NODE_ENV === 'development') {
         enhancers.push(devToolsExtension())
     }
 }
+const sagaMiddleware = createSagaMiddleware();
 
 const composedEnhancers = compose(
     applyMiddleware(...middleware),
-    ...enhancers
+    ...enhancers,
+    offline(offlineConfig)
 );
 
 const store = createStore(
-    rootReducer,
+    createReducer(),
     initialState,
     composedEnhancers
 );
+
+
+store.injectedReducers = {}; // Reducer registry
+
+//sagaMiddleware.run(mySaga);
+
 
 export default store
