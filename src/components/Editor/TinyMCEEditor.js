@@ -15,6 +15,7 @@ import 'tinymce/skins/lightgray/content.min.css'
 import {typeText} from "../../modules/bonga";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import {debounce} from "../../utils/helpers";
 
 class TinyMCEEditor extends React.Component {
     constructor(props)
@@ -22,37 +23,43 @@ class TinyMCEEditor extends React.Component {
         super(props);
 
         this.editor  = null;
+        //this.content = this.props.editorContent;
     }
 
     renderRichText()
     {
-        tinymce.remove(`#${this.props.id}`);
+        if(!this.editor)
+        {
+            tinymce.remove(`#${this.props.id}`);
+        }
 
-        this.editor = tinymce.init({
+        tinymce.init({
             selector: `#${this.props.id}`,
             //skin_url: `${process.env.PUBLIC_URL}/skins/lightgray`,
             plugins: ['paste', 'link', 'autoresize','wordcount','table', 'lists','advlist'],
             skin: false,
             menubar: false,
-            toolbar:'undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link',
+            toolbar:'undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist',
             setup: editor => {
-                //this.setState({ editor });
-                editor.on('keyup change', () => {
+                this.editor = editor;
+                    //this.setState({ editor });
+                //const throttler = debounce.bind(this);
+                editor.on('keyup change', debounce(() =>
+                {
                     const content = editor.getContent();
+                    //console.log('keyup change',content, editor);
+                    //this.content = content;
                     this.props.typeText(content);
-                    //console.log(content);
-                });
+                }, 500));
 
                 editor.on('init',(e) => {
+                    //console.log('tinymce init');
                     e.target.setContent(this.props.editorContent);
                 });
             }
         });
-    }
 
-    shouldComponentUpdate(nextProps, nextState)
-    {
-        return true;
+        //this.editor.setContent(this.props.editorContent);
     }
 
     componentDidMount()
@@ -63,6 +70,8 @@ class TinyMCEEditor extends React.Component {
     componentDidUpdate(prevProps, prevState)
     {
         this.renderRichText();
+
+        //
     }
 
     componentWillUnmount() {
@@ -81,10 +90,7 @@ class TinyMCEEditor extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    editorActive: state.bonga.editorActive,
-    editorContent:state.bonga.editorContent
-});
+const mapStateToProps = null;
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     typeText

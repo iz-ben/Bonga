@@ -2,12 +2,19 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
+import logoWhiteBackground from '../../logo-white-bg.png';
+import ChangingText from "../ChangingText/Loadable";
+import {connect} from "react-redux";
+
 const Wrapper = styled.div`
     display: flex;
     justify-content:center;
     flex-direction: column;
     align-items:center;
     flex:1;
+    p{
+        font-size:18px;
+    }
 `;
 
 const StartButton = styled(Link)`
@@ -21,14 +28,17 @@ const StartButton = styled(Link)`
     }
 `;
 
-export default class Home extends React.Component
+class Home extends React.Component
 {
     render()
     {
         return (
             <Wrapper>
-                <p>Sema</p>
-                <p>Talk about whatever's weighing on your mind here, anonymously.</p>
+                <p>
+                    <img src={logoWhiteBackground} alt="Bonga"/>
+                </p>
+                <ChangingText slogan="Bonga"/>
+                <p>Talk about whatever's weighing heavily on your mind here, anonymously.</p>
                 <p>
                     <StartButton to='share'>Start Here</StartButton>
                 </p>
@@ -36,3 +46,11 @@ export default class Home extends React.Component
         )
     }
 }
+
+const mapStateToProps = null
+
+const mapDispatchToProps = null;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home);

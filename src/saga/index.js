@@ -2,19 +2,34 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import request from '../utils/request'
 
-import {FETCH_SHARES, fetchSharesError, fetchSharesSuccessful} from "../modules/bonga";
-import {COMMENTS_API_ENDPOINT} from "../constants";
+import {
+    FETCH_SHARES, fetchSharesError, fetchSharesSuccessful, SUBMIT_STORY, submitStoryError,
+    submitStorySuccess
+} from "../modules/bonga";
+import {POST_STORY_API_ENDPOINT} from "../constants";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
-function* fetchShares() {
+function* fetchShares({url}) {
     try {
-        const requestURL = COMMENTS_API_ENDPOINT;
-        const response = yield call(request, requestURL);
-        const {data} = response;
-        console.log(data);
-        yield put(fetchSharesSuccessful(data));
+        const response = yield call(request, url);
+        yield put(fetchSharesSuccessful(response));
     } catch (e) {
         yield put(fetchSharesError(e.message));
+    }
+}
+
+function* submitStory({content, recaptcha}) {
+    //console.log(recatpcha)
+    try {
+        const formData = new FormData();
+        formData.append('content', content);
+        formData.append('recaptcha', recaptcha);
+        const response = yield call(request, POST_STORY_API_ENDPOINT,{method: 'POST',body:formData});
+        const {data} = response;
+        console.log(data);
+        yield put(submitStorySuccess(data));
+    } catch (e) {
+        yield put(submitStoryError(e.message));
     }
 }
 
@@ -30,6 +45,9 @@ function* fetchShares() {
 /**
  * Root saga manages watcher lifecycle
  */
-export default function* shareData() {
-    yield takeLatest(FETCH_SHARES, fetchShares);
+export default function* storyData() {
+    yield [
+        takeLatest(FETCH_SHARES, fetchShares),
+        takeLatest(SUBMIT_STORY, submitStory)
+    ];
 }

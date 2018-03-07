@@ -5,6 +5,7 @@ import Footer from "../../components/Footer";
 import HomePage from "../HomePage/Loadable";
 import About from "../About/Loadable";
 import Share from "../Share/Loadable";
+import StoryPage from "../StoryPage/Loadable";
 import NotFound from "../NotFound/Loadable";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +20,7 @@ class App extends React.Component {
                     <Route exact path="/" component={HomePage}/>
                     <Route exact path="/about" component={About}/>
                     <Route exact path="/share" component={Share}/>
+                    <Route exact path="/story/:uuid"  component={StoryPage} />
                     <Route component={NotFound}/>
                 </Switch>
             </div>

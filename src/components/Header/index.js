@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import Logo from '../../logo.png';
 import {connect} from "react-redux";
-import styled from 'styled-components';
 import {makeSelectPathname} from "../../containers/App/selector";
 
 class Header extends React.Component
@@ -27,6 +26,11 @@ class Header extends React.Component
                 body.className = body.className.replace( 'home', '' );
             }
         }
+    }
+
+    componentDidMount()
+    {
+        this.checkClass();
     }
     render()
     {

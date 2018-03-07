@@ -1,10 +1,14 @@
 import React from 'react';
-import {WHATS_ON_YOUR_MIND} from "../../constants";
-import {selectEditor, closeEditor} from "../../modules/bonga";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import TinyMCEEditor from "./TinyMCEEditor";
 import styled from 'styled-components';
+import ReCAPTCHA from 'react-google-recaptcha';
+
+import TinyMCEEditor from "./TinyMCEEditor";
+import {RECAPTCHA_KEY, WHATS_ON_YOUR_MIND} from "../../constants";
+import {selectEditor, closeEditor, submitStory, recaptchaChange} from "../../modules/bonga";
+
+import Loader from 'react-loaders'
 
 const RichEditor = styled.div`
     margin-bottom:10px;
@@ -32,14 +36,27 @@ class Editor extends React.Component
 {
     render()
     {
+
+        const overlay = this.props.loading ? <div className={`busy`}><Loader type="ball-clip-rotate-multiple" /></div>:'';
+        //const overlay = <div className={`busy`}><Loader type="ball-clip-rotate-multiple" /></div>;
         return (
             <div className="editor">
+                {overlay}
                 <RichEditor visible={this.props.editorActive}>
                     <TinyMCE>
-                        <TinyMCEEditor id={`richEditor`}/>
+                        <TinyMCEEditor id={`richEditor`} editorContent={this.props.editorContent}/>
                     </TinyMCE>
-                    <SubmitButton type="button" className="btn btn-primary btn-sm">Submit</SubmitButton>
-                    <button typeof="button"  className="btn btn-secondary btn-sm" onClick={this.props.closeEditor}>Cancel</button>
+                    <PlaceholderEditor visible={true}>
+                        <ReCAPTCHA
+                            sitekey={RECAPTCHA_KEY}
+                            onChange={(value)=> this.props.recaptchaChange(value)}
+                            size="normal"
+                        />
+                    </PlaceholderEditor>
+
+                    <SubmitButton type="button" className="btn btn-secondary" onClick={()=>this.props.submitStory(this.props.editorContent, this.props.recaptcha)}>Bonga</SubmitButton>
+                    <button typeof="button"  className="btn btn-default btn-sm" onClick={this.props.closeEditor}>Cancel</button>
+
                 </RichEditor>
                 <PlaceholderEditor visible={!this.props.editorActive}>
                     <input onClick={this.props.selectEditor} type="text" placeholder={WHATS_ON_YOUR_MIND} name=''/>
@@ -52,12 +69,16 @@ class Editor extends React.Component
 const mapStateToProps = state => ({
     editorActive: state.bonga.editorActive,
     replyTo: state.bonga.replyTo,
-    editorContent:state.bonga.editorContent
+    editorContent:state.bonga.editorContent,
+    loading:state.bonga.loading,
+    recaptcha:state.bonga.recaptcha
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     selectEditor,
-    closeEditor
+    closeEditor,
+    submitStory,
+    recaptchaChange
 }, dispatch);
 
 export default connect(

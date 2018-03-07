@@ -1,6 +1,10 @@
 import { createSelector } from 'reselect';
 
 const selectRoute = (state) => state.route;
+const selectStories = (state) => state.bonga.shares;
+const selectCurrentPage = (state) => state.bonga.currentPage;
+const numPageItems = (state) => state.bonga.perPage;
+const bonga = (state) => state.bonga;
 
 const makeSelectLocation = createSelector(
     selectRoute,
@@ -18,8 +22,46 @@ const makeSelectPathname = createSelector(
         return locationState ? locationState.pathname:null;
     }
 );
+//console.log(((state)=>state)())
+const getVisibleStories = createSelector(
+    selectStories,
+    selectCurrentPage,
+    numPageItems,
+    (stories, currentPage, numItems)=>
+    {
+        //console.log(stories, currentPage, numItems)
+    }
+);
+
+const getStories = createSelector(
+    bonga,
+    (stories)=>{
+        //console.log('getCurrentStories',stories.currentStories);
+        return stories.shares;
+    }
+);
+
+const getCurrentStories = createSelector(
+    bonga,
+    (stories)=>{
+        //console.log('getCurrentStories',stories.currentStories);
+        return stories.currentStories
+    }
+);
+
+const getSelectedStory = (uuid)=> createSelector(
+    getStories,
+    (stories)=>{
+        //console.log(uuid);
+        console.log(stories.find((story)=>story.uuid===uuid));
+        return stories.find((story)=>story.uuid===uuid)
+    }
+);
 
 export {
     makeSelectLocation,
-    makeSelectPathname
+    makeSelectPathname,
+    getVisibleStories,
+    getCurrentStories,
+    getSelectedStory
 };

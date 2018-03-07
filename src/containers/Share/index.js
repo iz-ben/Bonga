@@ -1,29 +1,47 @@
 import React, {Fragment} from 'react';
 import { Helmet } from 'react-helmet';
-import {SHARE_TITLE, SITE_NAME} from "../../constants";
+import {FETCH_STORIES_API_ENDPOINT, SHARE_TITLE, SITE_NAME} from "../../constants";
 import {Content} from "../../components/Content";
 import Editor from "../../components/Editor";
 import styled from 'styled-components';
-import {fetchShares} from "../../modules/bonga";
+import {fetchShares, selectPaginationPage} from "../../modules/bonga";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import ReactPaginate from 'react-paginate';
 import Comment from "../../components/Comment";
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft'
+import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight'
+import {getCurrentStories, getVisibleStories} from "../App/selector";
+import {buildApiUrl} from "../../utils/helpers";
+
 
 const ShareWrapper = styled(Content)`
-
 padding-top:50px;
+position:relative;
 `;
 
 class Share extends React.Component
 {
+    constructor(props)
+    {
+        super(props);
+        this.handlePaginationChange = this.handlePaginationChange.bind(this);
+    }
     componentDidMount()
     {
-        this.props.fetchData(1);
+        this.props.fetchData();
+    }
+
+    handlePaginationChange({selected})
+    {
+        const page = selected+1;
+        this.props.paginationPage(page);
+        this.props.fetchData(buildApiUrl(FETCH_STORIES_API_ENDPOINT,{'page':page}));
     }
     render()
     {
-        console.log(this.props.stories)
+        //console.log(this.props.stories)
         return (
             <Fragment>
                 <Helmet>
@@ -35,18 +53,18 @@ class Share extends React.Component
                     <div className={`stories`}>
                         {this.props.stories.map((story)=><Comment key={story.id} {...story}/>)}
                     </div>
-
-                    <ReactPaginate previousLabel={"previous"}
-                                   nextLabel={"next"}
-                                   breakLabel={<a href="">...</a>}
-                                   breakClassName={"break-me"}
-                                   pageCount={120}
-                                   marginPagesDisplayed={2}
-                                   pageRangeDisplayed={5}
-                                   onPageChange={()=>{}}
-                                   containerClassName={"pagination"}
-                                   subContainerClassName={"pages pagination"}
-                                   activeClassName={"active"} />
+                    <div id="react-paginate">
+                        <ReactPaginate previousLabel={<FontAwesomeIcon icon={faAngleLeft}/>}
+                                       nextLabel={<FontAwesomeIcon icon={faAngleRight}/>}
+                                       breakLabel={<a href="">...</a>}
+                                       breakClassName={"break-me"}
+                                       pageCount={this.props.pages}
+                                       marginPagesDisplayed={2}
+                                       pageRangeDisplayed={5}
+                                       onPageChange={this.handlePaginationChange}
+                                       subContainerClassName={"pages pagination"}
+                                       activeClassName={"active"} />
+                    </div>
                 </ShareWrapper>
             </Fragment>
         )
@@ -54,11 +72,15 @@ class Share extends React.Component
 }
 
 const mapStateToProps = state => ({
-    stories:state.bonga.shares
+    items:getVisibleStories(state),
+    stories:getCurrentStories(state),
+    loading:state.bonga.loading,
+    pages:Math.ceil(state.bonga.total/state.bonga.perPage)
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    fetchData:(page) => dispatch(fetchShares(page))
+    fetchData:fetchShares,
+    paginationPage:selectPaginationPage
 }, dispatch);
 
 export default connect(
