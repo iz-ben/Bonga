@@ -35,18 +35,12 @@ const getVisibleStories = createSelector(
 
 const getStories = createSelector(
     bonga,
-    (stories)=>{
-        //console.log('getCurrentStories',stories.currentStories);
-        return stories.shares;
-    }
+    (stories)=>stories.shares
 );
 
 const getCurrentStories = createSelector(
     bonga,
-    (stories)=>{
-        //console.log('getCurrentStories',stories.currentStories);
-        return stories.currentStories
-    }
+    (stories)=>stories.currentStories
 );
 
 const getSelectedStory = (uuid)=> createSelector(
