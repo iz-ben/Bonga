@@ -23,10 +23,17 @@ export const RECAPTCHA_ERROR =  'bonga/RECAPTCHA_ERROR';
 
 export const CHANGE_SLOGAN =  'bonga/CHANGE_SLOGAN';
 
+/**
+ * It's sort of redundant to have editorContent and replyEditorContent fields,
+ * but there's is a bug with resetting tinymce which forces me to have this type of usage
+ *
+ * @type Object
+ * */
 const initialState = {
     loading:false,
     editorActive:false,
     editorContent:'',
+    replyEditorContent:'',
     replyTo:null,
     placeholder:WHATS_ON_YOUR_MIND,
     shares:[],
@@ -91,6 +98,11 @@ export default (state = initialState, action) => {
             return {
                 ...state
             };
+        case SUBMIT_REPLY:
+            return {
+                ...state,
+                loading: true,
+            };
         case RECAPTCHA_ERROR:
             displayNotification(STORY_RECAPTCHA_ERROR, NOTIFICATIONS.ERROR);
             return {
@@ -115,13 +127,13 @@ export default (state = initialState, action) => {
                 editorContent:action.content
             };
         case PAGINATION_CHANGE:
-            console.log(action)
+            //console.log(action)
             return {
                 ...state,
                 currentPage:action.page
             };
         case RECAPTCHA_CHANGE:
-            console.log('recaptcha',action);
+            //console.log('recaptcha',action);
             return{
                 ...state,
                 recaptcha:action.value
@@ -180,14 +192,14 @@ export const typeText = ( text ) => {
 
 export const submitStory = ( text, recaptcha ) => {
 
-    console.log(typeof text, text)
+    //console.log(typeof text, text)
     if(text==='')
     {
         return {
             type:SUBMIT_STORY_VALIDATION_ERROR
         }
     }
-    console.log(typeof recaptcha, recaptcha)
+    //console.log(typeof recaptcha, recaptcha)
 
     if (recaptcha==='')
     {
@@ -199,6 +211,30 @@ export const submitStory = ( text, recaptcha ) => {
     return {
         type: SUBMIT_STORY,
         content: text,
+        recaptcha:recaptcha
+    }
+};
+
+/**
+ * TODO: Remember to reintroduce recaptcha
+ * @param text
+ * @param storyID
+ * @param recaptcha
+ */
+export const submitReply = (text, storyID, recaptcha = null)=>
+{
+    //console.log(SUBMIT_REPLY,storyID, text);
+    if(text==='')
+    {
+        return {
+            type:SUBMIT_STORY_VALIDATION_ERROR
+        }
+    }
+
+    return {
+        type:SUBMIT_REPLY,
+        in_reply_to:storyID,
+        content:text,
         recaptcha:recaptcha
     }
 };
