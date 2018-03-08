@@ -51,11 +51,7 @@ const getCurrentStories = createSelector(
 
 const getSelectedStory = (uuid)=> createSelector(
     getStories,
-    (stories)=>{
-        //console.log(uuid);
-        console.log(stories.find((story)=>story.uuid===uuid));
-        return stories.find((story)=>story.uuid===uuid)
-    }
+    (stories)=>stories.find((story)=>story.uuid===uuid)
 );
 
 export {
