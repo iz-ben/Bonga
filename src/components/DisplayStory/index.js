@@ -30,7 +30,7 @@ export default class DisplayStory extends React.Component
                     <div className="row">
                         <div className="col-sm-9">
                             <div className="form-group">
-                                <textarea className="form-control" placeholder={`Write your reply here. Be nice :)`} ref={ta => this.replyTextArea = ta}/>
+                                <textarea value={this.props.replyEditorContent} onChange={()=>this.props.typeReply(this.replyTextArea.value)} className="form-control" placeholder={`Write your reply here. Be nice :)`} ref={ta => this.replyTextArea = ta}/>
                             </div>
                         </div>
                         <div className="col-sm-3">

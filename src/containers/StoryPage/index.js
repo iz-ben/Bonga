@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import {getCurrentStories, getSelectedStory, getVisibleStories} from "../App/selector";
-import {fetchShares, selectPaginationPage, submitReply} from "../../modules/bonga";
+import {fetchShares, recaptchaChange, selectPaginationPage, submitReply, typeReply} from "../../modules/bonga";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {SITE_NAME} from "../../constants";
@@ -57,12 +57,13 @@ class StoryPage extends React.Component
         const content = this.props.selectedStory ? <DisplayStory {...this.props} {...this.props.selectedStory}/>:'<div>Loading story...</div>';
 
         //console.log(this.props.selectedStory)
+        const description = this.props.selectedStory ? this.props.selectedStory.excerpt : '';
 
         return (
             <div className="about">
                 <Helmet>
-                    <title>{`Story - ${SITE_NAME}`}</title>
-                    <meta name="description" content="" />
+                    <title>{`${description} - ${SITE_NAME}`}</title>
+                    <meta name="description" content={description} />
                 </Helmet>
                 <StoryWrapper>
                     {content}
@@ -78,13 +79,16 @@ const mapStateToProps = (state, props) => ({
     stories:getCurrentStories(state),
     selectedStory:getSelectedStory(props.match.params.uuid)(state),
     loading:state.bonga.loading,
-    pages:Math.ceil(state.bonga.total/state.bonga.perPage)
+    pages:Math.ceil(state.bonga.total/state.bonga.perPage),
+    replyEditorContent:state.bonga.replyEditorContent,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     fetchData:fetchShares,
     paginationPage:selectPaginationPage,
-    submitReply
+    submitReply,
+    recaptchaChange,
+    typeReply
 }, dispatch);
 
 export default connect(

@@ -8,6 +8,7 @@ import { animateScroll as scroll } from 'react-scroll';
 
 export const SELECT_EDITOR = 'bonga/SELECT_EDITOR';
 export const TYPE_TEXT = 'bonga/TYPE_TEXT';
+export const TYPE_REPLY = 'bonga/TYPE_REPLY';
 export const CLOSE_EDITOR = 'bonga/CLOSE_EDITOR';
 export const SUBMIT_STORY = 'bonga/SUBMIT_STORY';
 export const SUBMIT_STORY_VALIDATION_ERROR = 'bonga/SUBMIT_STORY_VALIDATION_ERROR';
@@ -121,10 +122,17 @@ export default (state = initialState, action) => {
             };
 
         case TYPE_TEXT:
-            console.log(TYPE_TEXT, action.content);
+            //console.log(TYPE_TEXT, action.content);
             return {
                 ...state,
                 editorContent:action.content
+            };
+
+        case TYPE_REPLY:
+            //console.log(TYPE_TEXT, action.content);
+            return {
+                ...state,
+                replyEditorContent:action.content
             };
         case PAGINATION_CHANGE:
             //console.log(action)
@@ -190,6 +198,14 @@ export const typeText = ( text ) => {
     }
 };
 
+export const typeReply = ( text ) => {
+    //console.log(text)
+    return {
+        type: TYPE_REPLY,
+        content:text
+    }
+};
+
 export const submitStory = ( text, recaptcha ) => {
 
     //console.log(typeof text, text)
@@ -223,7 +239,7 @@ export const submitStory = ( text, recaptcha ) => {
  */
 export const submitReply = (text, storyID, recaptcha = null)=>
 {
-    //console.log(SUBMIT_REPLY,storyID, text);
+    console.log(SUBMIT_REPLY,storyID, text);
     if(text==='')
     {
         return {

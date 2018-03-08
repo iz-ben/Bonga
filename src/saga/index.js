@@ -3,7 +3,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import request from '../utils/request'
 
 import {
-    FETCH_SHARES, fetchSharesError, fetchSharesSuccessful, SUBMIT_STORY, submitStoryError,
+    FETCH_SHARES, fetchSharesError, fetchSharesSuccessful, SUBMIT_REPLY, SUBMIT_STORY, submitStoryError,
     submitStorySuccess
 } from "../modules/bonga";
 import {POST_STORY_API_ENDPOINT} from "../constants";
@@ -26,7 +26,24 @@ function* submitStory({content, recaptcha}) {
         formData.append('recaptcha', recaptcha);
         const response = yield call(request, POST_STORY_API_ENDPOINT,{method: 'POST',body:formData});
         const {data} = response;
-        console.log(data);
+        //console.log(data);
+        yield put(submitStorySuccess(data));
+    } catch (e) {
+        yield put(submitStoryError(e.message));
+    }
+}
+
+function* submitReply({content, recaptcha, in_reply_to}) {
+    //console.log(recatpcha)
+    try {
+        const formData = new FormData();
+        formData.append('content', content);
+        formData.append('recaptcha', recaptcha);
+        formData.append('in_reply_to', in_reply_to);
+
+        const response = yield call(request, POST_STORY_API_ENDPOINT,{method: 'POST',body:formData});
+        const {data} = response;
+        //console.log(data);
         yield put(submitStorySuccess(data));
     } catch (e) {
         yield put(submitStoryError(e.message));
@@ -48,6 +65,7 @@ function* submitStory({content, recaptcha}) {
 export default function* storyData() {
     yield [
         takeLatest(FETCH_SHARES, fetchShares),
-        takeLatest(SUBMIT_STORY, submitStory)
+        takeLatest(SUBMIT_STORY, submitStory),
+        takeLatest(SUBMIT_REPLY, submitReply)
     ];
 }
