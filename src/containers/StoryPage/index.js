@@ -1,17 +1,13 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import {getCurrentStories, getSelectedStory, getVisibleStories} from "../App/selector";
-import {fetchShares, selectPaginationPage} from "../../modules/bonga";
+import {fetchShares, selectPaginationPage, submitReply} from "../../modules/bonga";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {SITE_NAME} from "../../constants";
 import {Content} from "../../components/Content";
 import styled from "styled-components/";
-import Parser from 'html-react-parser';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faClock from '@fortawesome/fontawesome-free-solid/faClock'
-import TimeAgo from 'react-timeago';
-import autosize from 'autosize';
+import DisplayStory from "../../components/DisplayStory";
 
 const StoryWrapper = styled(Content)`
 padding-top:50px;
@@ -55,14 +51,13 @@ position:relative;
 
 class StoryPage extends React.Component
 {
-    componentDidMount()
-    {
-        autosize(this.replyTextArea);
-    }
+
     render()
     {
-        const content = this.props.selectedStory ? this.props.selectedStory.content:'';
-        const reply = this.props.selectedStory && this.props.selectedStory.in_reply_to ? '':<span>{this.props.selectedStory.replies} replies . </span>
+        const content = this.props.selectedStory ? <DisplayStory {...this.props} {...this.props.selectedStory}/>:'<div>Loading story...</div>';
+
+        //console.log(this.props.selectedStory)
+
         return (
             <div className="about">
                 <Helmet>
@@ -70,26 +65,7 @@ class StoryPage extends React.Component
                     <meta name="description" content="" />
                 </Helmet>
                 <StoryWrapper>
-                    <div className="comment">
-                        <div className='content'>
-                            {Parser(content)}
-                        </div>
-                        <div className="comment-meta">
-                            <div className="posted">{reply}<FontAwesomeIcon icon={faClock}/> Published <TimeAgo date={this.props.selectedStory.posted} /></div>
-                        </div>
-                    </div>
-                    <div className="reply-comment">
-                        <div className="row">
-                            <div className="col-sm-9">
-                                <div className="form-group">
-                                    <textarea className="form-control" placeholder={`Write your reply here. Be nice :)`} ref={ta => this.replyTextArea = ta}/>
-                                </div>
-                            </div>
-                            <div className="col-sm-3">
-                                <button className="btn btn-secondary btn-lg">Reply</button>
-                            </div>
-                        </div>
-                    </div>
+                    {content}
                 </StoryWrapper>
             </div>
         )
@@ -107,7 +83,8 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     fetchData:fetchShares,
-    paginationPage:selectPaginationPage
+    paginationPage:selectPaginationPage,
+    submitReply
 }, dispatch);
 
 export default connect(
