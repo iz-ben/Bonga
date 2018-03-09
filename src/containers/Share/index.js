@@ -42,6 +42,7 @@ class Share extends React.Component
     render()
     {
         //console.log(this.props.stories)
+        //console.log(this.props.pages);
         return (
             <Fragment>
                 <Helmet>
@@ -54,16 +55,18 @@ class Share extends React.Component
                         {this.props.stories.map((story)=><Comment key={story.id} {...story}/>)}
                     </div>
                     <div id="react-paginate">
-                        <ReactPaginate previousLabel={<FontAwesomeIcon icon={faAngleLeft}/>}
-                                       nextLabel={<FontAwesomeIcon icon={faAngleRight}/>}
-                                       breakLabel={<a href="">...</a>}
-                                       breakClassName={"break-me"}
-                                       pageCount={this.props.pages}
-                                       marginPagesDisplayed={2}
-                                       pageRangeDisplayed={5}
-                                       onPageChange={this.handlePaginationChange}
-                                       subContainerClassName={"pages pagination"}
-                                       activeClassName={"active"} />
+                        {this.props.pages > 1 ? <ReactPaginate previousLabel={<FontAwesomeIcon icon={faAngleLeft}/>}
+                                            nextLabel={<FontAwesomeIcon icon={faAngleRight}/>}
+                                            breakLabel={<a href="">...</a>}
+                                            breakClassName={"break-me"}
+                                            pageCount={this.props.pages}
+                                            marginPagesDisplayed={2}
+                                            pageRangeDisplayed={5}
+                                            onPageChange={this.handlePaginationChange}
+                                            subContainerClassName={"pages pagination"}
+                                            activeClassName={"active"} />
+                            :''
+                        }
                     </div>
                 </ShareWrapper>
             </Fragment>

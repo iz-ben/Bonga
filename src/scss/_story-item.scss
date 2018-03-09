@@ -1,39 +1,40 @@
 
-
 .stories
 {
   .comment
   {
-    padding: 30px;
+    padding: 10px 10px 36px;
     border-bottom: #d4d4d4 solid 1px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     position: relative;
+
     &:nth-child(even)
     {
       background-color: #f7f7f7;
-      .comment-meta
+
+    }
+
+    .comment-meta
+    {
+      .reply
       {
-        .reply
+        position: absolute;
+        bottom: -1px;
+        left:10px;
+        .btn
         {
-          .btn
-          {
-            background-color: #42c7f4;
-          }
+          background-color: #42c7f4;
         }
       }
     }
 
     .comment-meta
     {
-      position: absolute;
-      bottom: 0;
-      left:0;
-      right: 0;
-      padding: 15px;
+      padding: 15px 0;
 
       .posted
       {
-        float:right;
+        //float:right;
         color: #848484;
       }
 
@@ -41,11 +42,53 @@
       {
         position: absolute;
         bottom: -1px;
-        left:30px;
+        left:10px;
         .btn
         {
           border-radius: 0;
           border: none;
+        }
+      }
+    }
+
+    @include media-breakpoint-up(md)
+    {
+      .comment {
+        padding: 30px 30px 36px;
+        border-bottom: #d4d4d4 solid 1px;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .content
+      {
+        padding: 0 20px;
+      }
+
+      .comment-meta
+      {
+        position: absolute;
+        bottom: 0;
+        left:0;
+        right: 0;
+        padding: 15px;
+
+        .posted
+        {
+          float:right;
+          color: #848484;
+        }
+
+        .reply
+        {
+          position: absolute;
+          bottom: -1px;
+          left:30px;
+          .btn
+          {
+            border-radius: 0;
+            border: none;
+          }
         }
       }
     }

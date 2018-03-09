@@ -1,12 +1,19 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import {getCurrentStories, getSelectedStory, getVisibleStories} from "../App/selector";
-import {fetchShares, recaptchaChange, selectPaginationPage, submitReply, typeReply} from "../../modules/bonga";
+import styled from "styled-components/";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import {getCurrentStories, getSelectedStory, getStoryReplies, getVisibleStories} from "../App/selector";
+import {
+    fetchReplies,
+    fetchShares,
+    recaptchaChange,
+    selectPaginationPage,
+    submitReply,
+    typeReply
+} from "../../modules/bonga";
 import {SITE_NAME} from "../../constants";
 import {Content} from "../../components/Content";
-import styled from "styled-components/";
 import DisplayStory from "../../components/DisplayStory";
 
 const StoryWrapper = styled(Content)`
@@ -54,6 +61,7 @@ class StoryPage extends React.Component
 
     render()
     {
+        //console.log(this.props.storyReplies);
         const content = this.props.selectedStory ? <DisplayStory {...this.props} {...this.props.selectedStory}/>:'<div>Loading story...</div>';
 
         //console.log(this.props.selectedStory)
@@ -81,10 +89,12 @@ const mapStateToProps = (state, props) => ({
     loading:state.bonga.loading,
     pages:Math.ceil(state.bonga.total/state.bonga.perPage),
     replyEditorContent:state.bonga.replyEditorContent,
+    recaptcha:state.bonga.recaptcha,
+    storyReplies:getStoryReplies(state)
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    fetchData:fetchShares,
+    fetchData:fetchReplies,
     paginationPage:selectPaginationPage,
     submitReply,
     recaptchaChange,

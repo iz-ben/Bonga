@@ -14,10 +14,15 @@ export const SUBMIT_STORY = 'bonga/SUBMIT_STORY';
 export const SUBMIT_STORY_VALIDATION_ERROR = 'bonga/SUBMIT_STORY_VALIDATION_ERROR';
 export const SUBMIT_STORY_SUCCESS = 'bonga/SUBMIT_STORY_SUCCESS';
 export const SUBMIT_STORY_ERROR = 'bonga/SUBMIT_STORY_ERROR';
+export const SUBMIT_STORY_REPLY_SUCCESS = 'bonga/SUBMIT_STORY_REPLY_SUCCESS';
+export const SUBMIT_STORY_REPLY_ERROR = 'bonga/SUBMIT_STORY_REPLY_ERROR';
 export const SUBMIT_REPLY = 'bonga/SUBMIT_REPLY';
 export const FETCH_SHARES = 'bonga/FETCH_SHARES';
 export const FETCH_SHARES_SUCCESSFUL = 'bonga/FETCH_SHARES_SUCCESSFUL';
 export const FETCH_SHARES_ERROR = 'bonga/FETCH_SHARES_ERROR';
+export const FETCH_REPLIES = 'bonga/FETCH_REPLIES';
+export const FETCH_REPLIES_SUCCESSFUL = 'bonga/FETCH_REPLIES_SUCCESSFUL';
+export const FETCH_REPLIES_ERROR = 'bonga/FETCH_REPLIES_ERROR';
 export const PAGINATION_CHANGE =  'bonga/PAGINATION_CHANGE';
 export const RECAPTCHA_CHANGE =  'bonga/RECAPTCHA_CHANGE';
 export const RECAPTCHA_ERROR =  'bonga/RECAPTCHA_ERROR';
@@ -25,6 +30,7 @@ export const RECAPTCHA_ERROR =  'bonga/RECAPTCHA_ERROR';
 export const CHANGE_SLOGAN =  'bonga/CHANGE_SLOGAN';
 
 /**
+ * TODO: Move actions into a separate file
  * It's sort of redundant to have editorContent and replyEditorContent fields,
  * but there's is a bug with resetting tinymce which forces me to have this type of usage
  *
@@ -45,7 +51,8 @@ const initialState = {
     total:0,
     pageIndex:{1:[0,10]},
     recaptcha:'',
-    slogan:SLOGANS.pop()
+    slogan:SLOGANS.pop(),
+    storyReplies:[]
 };
 
 export default (state = initialState, action) => {
@@ -94,6 +101,19 @@ export default (state = initialState, action) => {
                 loading: false,
                 error:action.error
             };
+
+        case FETCH_REPLIES_SUCCESSFUL:
+            return {
+                ...state,
+                loading: false,
+                storyReplies:action.data
+            };
+        case FETCH_REPLIES_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error:action.error
+            };
         case SUBMIT_STORY_VALIDATION_ERROR:
             displayNotification(STORY_SUBMITTED_ERROR, NOTIFICATIONS.ERROR);
             return {
@@ -103,6 +123,22 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
+            };
+        case SUBMIT_STORY_REPLY_SUCCESS:
+            displayNotification("Your response has been received");
+            //console.log(action, state)
+            return {
+                ...state,
+                loading: false,
+                editorActive:false,
+                replyEditorContent:'',
+                storyReplies:[action.story, ...state.storyReplies]
+            };
+        case SUBMIT_STORY_REPLY_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error:action.error
             };
         case RECAPTCHA_ERROR:
             displayNotification(STORY_RECAPTCHA_ERROR, NOTIFICATIONS.ERROR);
@@ -159,6 +195,10 @@ export default (state = initialState, action) => {
     }
 }
 
+/**
+ * @param url
+ * @returns {{type: string, url}}
+ */
 export const fetchShares = ( url = FETCH_STORIES_API_ENDPOINT ) => {
     return {
         type: FETCH_SHARES,
@@ -187,6 +227,38 @@ export const fetchSharesSuccessful = ( {data, meta} ) => {
 export const fetchSharesError = ( error ) => {
     return {
         type: FETCH_SHARES_ERROR,
+        error:error
+    }
+};
+
+/**
+ * @param url
+ * @returns {{type: string, url}}
+ */
+export const fetchReplies = ( url = FETCH_STORIES_API_ENDPOINT ) => {
+    return {
+        type: FETCH_REPLIES,
+        url:url
+    };
+};
+
+
+/**
+ *
+ * @param data
+ * @param meta
+ * @returns {{type: string, data: *}}
+ */
+export const fetchRepliesSuccessful = ( {data} ) => {
+    return {
+        type: FETCH_REPLIES_SUCCESSFUL,
+        data:data
+    }
+};
+
+export const fetchRepliesError = ( error ) => {
+    return {
+        type: FETCH_REPLIES_ERROR,
         error:error
     }
 };
@@ -231,19 +303,40 @@ export const submitStory = ( text, recaptcha ) => {
     }
 };
 
+export const submitStorySuccess = ( story ) => {
+    return {
+        type: SUBMIT_STORY_SUCCESS,
+        story: {...story}
+    }
+};
+
+export const submitStoryError = ( error ) => {
+    return {
+        type: SUBMIT_STORY_ERROR,
+        error: error
+    }
+};
+
 /**
  * TODO: Remember to reintroduce recaptcha
  * @param text
  * @param storyID
  * @param recaptcha
  */
-export const submitReply = (text, storyID, recaptcha = null)=>
+export const submitReply = (text, storyID, recaptcha = '')=>
 {
-    console.log(SUBMIT_REPLY,storyID, text);
+    //console.log(SUBMIT_REPLY,storyID, text);
     if(text==='')
     {
         return {
             type:SUBMIT_STORY_VALIDATION_ERROR
+        }
+    }
+
+    if (recaptcha==='')
+    {
+        return {
+            type:RECAPTCHA_ERROR
         }
     }
 
@@ -255,16 +348,21 @@ export const submitReply = (text, storyID, recaptcha = null)=>
     }
 };
 
-export const submitStorySuccess = ( story ) => {
+/**
+ *
+ * @param story
+ * @returns {{type: string, story: {}}}
+ */
+export const submitStoryReplySuccess = ( story ) => {
     return {
-        type: SUBMIT_STORY_SUCCESS,
+        type: SUBMIT_STORY_REPLY_SUCCESS,
         story: {...story}
     }
 };
 
-export const submitStoryError = ( error ) => {
+export const submitStoryReplyError = ( error ) => {
     return {
-        type: SUBMIT_STORY_ERROR,
+        type: SUBMIT_STORY_REPLY_ERROR,
         error: error
     }
 };

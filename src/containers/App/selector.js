@@ -43,6 +43,11 @@ const getCurrentStories = createSelector(
     (stories)=>stories.currentStories
 );
 
+const getStoryReplies = createSelector(
+    bonga,
+    (stories)=>stories.storyReplies
+);
+
 const getSelectedStory = (uuid)=> createSelector(
     getStories,
     (stories)=>stories.find((story)=>story.uuid===uuid)
@@ -53,5 +58,6 @@ export {
     makeSelectPathname,
     getVisibleStories,
     getCurrentStories,
-    getSelectedStory
+    getSelectedStory,
+    getStoryReplies
 };

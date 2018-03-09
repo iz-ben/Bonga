@@ -92,31 +92,57 @@ body.home .logo {
   font-size: 42px;
   line-height: 150px; }
 
+.main-content {
+  padding: 0 10px; }
+
 .stories .comment {
-  padding: 30px;
+  padding: 10px 10px 36px;
   border-bottom: #d4d4d4 solid 1px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   position: relative; }
   .stories .comment:nth-child(even) {
     background-color: #f7f7f7; }
-    .stories .comment:nth-child(even) .comment-meta .reply .btn {
+  .stories .comment .comment-meta .reply {
+    position: absolute;
+    bottom: -1px;
+    left: 10px; }
+    .stories .comment .comment-meta .reply .btn {
       background-color: #42c7f4; }
   .stories .comment .comment-meta {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 15px; }
+    padding: 15px 0; }
     .stories .comment .comment-meta .posted {
-      float: right;
       color: #848484; }
     .stories .comment .comment-meta .reply {
       position: absolute;
       bottom: -1px;
-      left: 30px; }
+      left: 10px; }
       .stories .comment .comment-meta .reply .btn {
         border-radius: 0;
         border: none; }
+  @media (min-width: 768px) {
+    .stories .comment .comment {
+      padding: 30px 30px 36px;
+      border-bottom: #d4d4d4 solid 1px;
+      margin-bottom: 30px;
+      position: relative; }
+    .stories .comment .content {
+      padding: 0 20px; }
+    .stories .comment .comment-meta {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 15px; }
+      .stories .comment .comment-meta .posted {
+        float: right;
+        color: #848484; }
+      .stories .comment .comment-meta .reply {
+        position: absolute;
+        bottom: -1px;
+        left: 30px; }
+        .stories .comment .comment-meta .reply .btn {
+          border-radius: 0;
+          border: none; } }
 
 @keyframes rotate {
   0% {

@@ -10,7 +10,7 @@ class About extends React.Component
             <div className="about">
                 <Helmet>
                     <title>{`${ABOUT_TITLE} - ${SITE_NAME}`}</title>
-                    <meta name="description" content="" />
+                    <meta name="description" content="Mental Health Campaign" />
                 </Helmet>
             </div>
         )

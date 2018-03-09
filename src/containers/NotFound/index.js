@@ -10,7 +10,7 @@ class NotFound extends React.Component
             <div className="about">
                 <Helmet>
                     <title>{`${NOT_FOUND_TITLE} - ${SITE_NAME}`}</title>
-                    <meta name="description" content="" />
+                    <meta name="description" content="Not found" />
                 </Helmet>
                 <p>Page not found</p>
             </div>

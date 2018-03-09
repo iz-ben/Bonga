@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+//import {Link} from 'react-router-dom';
 
 export default class Footer extends React.Component
 {
@@ -13,7 +13,7 @@ export default class Footer extends React.Component
                             <span className="text-muted">&copy;2018 Bonga is a Capital Group initiative</span>
                         </div>
                         <div className="col">
-                            <Link to='about'>About</Link>
+
                         </div>
                     </div>
                 </div>

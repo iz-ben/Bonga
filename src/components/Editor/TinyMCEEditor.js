@@ -39,7 +39,7 @@ class TinyMCEEditor extends React.Component {
             plugins: ['paste', 'link', 'autoresize','wordcount','table', 'lists','advlist'],
             skin: false,
             menubar: false,
-            toolbar:'undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist',
+            toolbar:'undo redo | bold italic | bullist numlist',
             setup: editor => {
                 this.editor = editor;
                     //this.setState({ editor });

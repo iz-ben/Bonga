@@ -13,7 +13,7 @@ class HomePage extends React.Component
             <div className="home">
                 <Helmet>
                     <title>{`${HOME_TITLE} - ${SITE_NAME}`}</title>
-                    <meta name="description" content="" />
+                    <meta name="description" content="Speak your mind" />
                 </Helmet>
                 <Content>
                     <Home {...this.props}/>
